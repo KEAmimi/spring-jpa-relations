@@ -26,9 +26,9 @@ public class InitData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Order order1 = new Order(LocalDate.now(), OrderStatus.PAID);
-        Order Order2 = new Order(LocalDate.now(), OrderStatus.PAID);
+        Order order2 = new Order(LocalDate.now(), OrderStatus.PAID);
         orderRepository.save(order1);
-        orderRepository.save(Order2);
+        orderRepository.save(order2);
         // Or use orderRepository.saveAll(List.of(order1, order2));
 
         OrderLine orderLine1 = new OrderLine("Product A", 10.0, 1);
@@ -39,11 +39,12 @@ public class InitData implements CommandLineRunner {
         OrderLine orderLine5 = new OrderLine("Product E", 25.0, 4);
 
         // Add the relationship
-        orderLine1.setOrder(order1);
-        orderLine2.setOrder(order1);
-        orderLine3.setOrder(Order2);
-        orderLine4.setOrder(Order2);
-        orderLine5.setOrder(Order2);
+        // Add the relationship
+        order1.addOrderLine(orderLine1);
+        order1.addOrderLine(orderLine2);
+        order2.addOrderLine(orderLine3);
+        order2.addOrderLine(orderLine4);
+        order2.addOrderLine(orderLine5);
 
         orderLineRepository.saveAll(List.of(orderLine1, orderLine2, orderLine3, orderLine4, orderLine5));
     }
