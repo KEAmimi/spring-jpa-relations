@@ -1,6 +1,5 @@
 package ek.osnb.jpa.orders.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ek.osnb.jpa.common.model.BaseEntity;
 import jakarta.persistence.*;
 
@@ -17,9 +16,8 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "order")
-    private List<OrderLine> orderLineList = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<OrderLine> orderLines = new ArrayList<>();
 
     public Order() {}
 
@@ -44,22 +42,22 @@ public class Order extends BaseEntity {
         this.status = status;
     }
 
-    public List<OrderLine> getOrderLineList() {
-        return orderLineList;
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
     public void addOrderLine(OrderLine orderLine) {
-        orderLineList.add(orderLine);
+        orderLines.add(orderLine);
         orderLine.setOrder(this);
     }
 
     public void removeOrderLine(OrderLine orderLine) {
-        orderLineList.remove(orderLine);
+        orderLines.remove(orderLine);
         orderLine.setOrder(null);
     }
 
     public void clearOrderLines() {
-        for (OrderLine orderLine : new ArrayList<>(orderLineList)) {
+        for (OrderLine orderLine : new ArrayList<>(orderLines)) {
             removeOrderLine(orderLine);
         }
     }
